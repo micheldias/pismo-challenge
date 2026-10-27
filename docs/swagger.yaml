@@ -1,0 +1,207 @@
+basePath: /
+definitions:
+  controller.AccountRequestDto:
+    properties:
+      document_number:
+        description: customer document number
+        example: ABC1234
+        maxLength: 100
+        minLength: 4
+        type: string
+    required:
+    - document_number
+    type: object
+  controller.AccountResponseDto:
+    properties:
+      account_id:
+        description: account identifier
+        type: integer
+      document_number:
+        description: customer document number
+        type: string
+    type: object
+  controller.TransactionRequestDto:
+    properties:
+      account_id:
+        description: account identifier
+        example: 1
+        type: integer
+      amount:
+        description: transaction amount in cents
+        example: 1
+        type: integer
+      operation_type_id:
+        description: operation type id
+        example: 1
+        type: integer
+    required:
+    - account_id
+    - amount
+    - operation_type_id
+    type: object
+  controller.TransactionResponseDto:
+    properties:
+      account_id:
+        description: account identifier
+        type: integer
+      amount:
+        description: transaction amount in cents
+        type: integer
+      event_date:
+        description: transaction created date
+        type: string
+      operation_type_id:
+        description: operation type id
+        type: integer
+      transaction_id:
+        description: transaction identifier
+        type: integer
+    type: object
+  servermodel.ErrorDto:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: michelc.dias@gmail.com
+    name: Michel Dias
+  description: This is a  REST API with Chi and Swaggo
+  title: Pismo Challenge API
+  version: "1.0"
+paths:
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: create an account
+      parameters:
+      - description: account
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AccountRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.AccountResponseDto'
+        "400":
+          description: Bad Request
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "500":
+          description: Internal Server Error
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "503":
+          description: Service Unavailable
+      summary: account endpoint
+      tags:
+      - Account
+  /accounts/{accountId}:
+    get:
+      consumes:
+      - application/json
+      description: Get an account by account id
+      parameters:
+      - description: Account ID
+        in: path
+        name: accountId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.AccountResponseDto'
+        "400":
+          description: Bad Request
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "500":
+          description: Internal Server Error
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "503":
+          description: Service Unavailable
+      summary: get account by id
+      tags:
+      - Account
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: create a transaction
+      parameters:
+      - description: transaction
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controller.TransactionRequestDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.TransactionResponseDto'
+        "400":
+          description: Bad Request
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "500":
+          description: Internal Server Error
+          headers:
+            x-request-id:
+              description: request id
+              type: string
+          schema:
+            items:
+              $ref: '#/definitions/servermodel.ErrorDto'
+            type: array
+        "503":
+          description: Service Unavailable
+      summary: transaction endpoint
+      tags:
+      - Transaction
+swagger: "2.0"

@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: meu_usuario
+      POSTGRES_PASSWORD: minha_senha_segura
+      POSTGRES_DB: meu_banco
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./mocks/populate.sql:/docker-entrypoint-initdb.d/init.sql"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meu_usuario -d meu_banco"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: golang_app
+    ports:
+      - "8080:8080"
+    environment:
+      APP_DATABASE_HOST: db
+      APP_DATABASE_USER: meu_usuario
+      APP_DATABASE_PASSWORD: minha_senha_segura
+      APP_DATABASE_DBNAME: meu_banco
+      APP_DATABASE_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+

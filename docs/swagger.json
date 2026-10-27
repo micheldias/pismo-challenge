@@ -1,0 +1,306 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a  REST API with Chi and Swaggo",
+        "title": "Pismo Challenge API",
+        "contact": {
+            "name": "Michel Dias",
+            "email": "michelc.dias@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/accounts": {
+            "post": {
+                "description": "create an account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "account endpoint",
+                "parameters": [
+                    {
+                        "description": "account",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.AccountRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controller.AccountResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/accounts/{accountId}": {
+            "get": {
+                "description": "Get an account by account id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "get account by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Account ID",
+                        "name": "accountId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controller.AccountResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "post": {
+                "description": "create a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "transaction endpoint",
+                "parameters": [
+                    {
+                        "description": "transaction",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.TransactionRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/controller.TransactionResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/servermodel.ErrorDto"
+                            }
+                        },
+                        "headers": {
+                            "x-request-id": {
+                                "type": "string",
+                                "description": "request id"
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.AccountRequestDto": {
+            "type": "object",
+            "required": [
+                "document_number"
+            ],
+            "properties": {
+                "document_number": {
+                    "description": "customer document number",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 4,
+                    "example": "ABC1234"
+                }
+            }
+        },
+        "controller.AccountResponseDto": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "description": "account identifier",
+                    "type": "integer"
+                },
+                "document_number": {
+                    "description": "customer document number",
+                    "type": "string"
+                }
+            }
+        },
+        "controller.TransactionRequestDto": {
+            "type": "object",
+            "required": [
+                "account_id",
+                "amount",
+                "operation_type_id"
+            ],
+            "properties": {
+                "account_id": {
+                    "description": "account identifier",
+                    "type": "integer",
+                    "example": 1
+                },
+                "amount": {
+                    "description": "transaction amount in cents",
+                    "type": "integer",
+                    "example": 1
+                },
+                "operation_type_id": {
+                    "description": "operation type id",
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "controller.TransactionResponseDto": {
+            "type": "object",
+            "properties": {
+                "account_id": {
+                    "description": "account identifier",
+                    "type": "integer"
+                },
+                "amount": {
+                    "description": "transaction amount in cents",
+                    "type": "integer"
+                },
+                "event_date": {
+                    "description": "transaction created date",
+                    "type": "string"
+                },
+                "operation_type_id": {
+                    "description": "operation type id",
+                    "type": "integer"
+                },
+                "transaction_id": {
+                    "description": "transaction identifier",
+                    "type": "integer"
+                }
+            }
+        },
+        "servermodel.ErrorDto": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
